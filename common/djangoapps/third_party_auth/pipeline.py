@@ -103,6 +103,9 @@ from common.djangoapps.util.json_request import JsonResponse
 
 from . import provider
 
+################# CUSTOM FOR PP1 =====================
+from django.contrib.auth.models import User
+
 # These are the query string params you can pass
 # to the URL that starts the authentication process.
 #
@@ -298,15 +301,27 @@ def get_authenticated_user(auth_provider, username, uid):
         user has no social auth associated with the given backend.
         AssertionError: if the user is not authenticated.
     """
-    match = social_django.models.DjangoStorage.user.get_social_auth(provider=auth_provider.backend_name, uid=uid)
+    ##############################    CUSTOM   ############################
+    """
+    IN HERE WHERE WANT TO CUSTOM FOR JUST FUNIX GOOGLE ACCOUNT SIGN IN
+    """
+    match = User.objects.get(email=uid)
+    #match = social_django.models.DjangoStorage.user.get_social_auth(provider='google-oauth2', uid=uid)
 
-    if not match or match.user.username != username:
+    if not match:
         raise User.DoesNotExist
 
-    user = match.user
-    user.backend = auth_provider.get_authentication_backend()
-    return user
+    # if not match or match.user.username != username:
+    #     raise User.DoesNotExist
 
+    user = match
+    # user = match.user
+
+    user.backend = 'social_core.backends.google.GoogleOAuth2'
+    # user.backend = auth_provider.get_authentication_backend()
+
+    return user
+    ######################### END CUSTOM ######################
 
 def _get_enabled_provider(provider_id):
     """Gets an enabled provider by its provider_id member or throws."""
