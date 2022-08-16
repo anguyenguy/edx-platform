@@ -97,7 +97,7 @@ def get_login_session_form(request):
 
     # Translators: These instructions appear on the login form, immediately
     # below a field meant to hold the user's email address.
-    email_instructions = _("The email address you used to register with {platform_name}").format(
+    email_instructions = _("The email address you used to register with Funix").format(
         platform_name=configuration_helpers.get_value('PLATFORM_NAME', settings.PLATFORM_NAME)
     )
 

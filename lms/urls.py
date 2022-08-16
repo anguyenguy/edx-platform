@@ -417,7 +417,7 @@ urlpatterns += [
         staticbook_views.index,
         name='book',
     ),
-
+    
     re_path(
         r'^courses/{}/pdfbook/(?P<book_index>\d+)/$'.format(
             settings.COURSE_ID_PATTERN,

@@ -64,7 +64,9 @@ AUDIT_LOG = logging.getLogger("audit")
 USER_MODEL = get_user_model()
 
 
+
 def _do_third_party_auth(request):
+
     """
     User is already authenticated via 3rd party, now try to find and return their associated Django user.
     """
@@ -75,7 +77,9 @@ def _do_third_party_auth(request):
     requested_provider = provider.Registry.get_from_pipeline(running_pipeline)
     platform_name = configuration_helpers.get_value("platform_name", settings.PLATFORM_NAME)
 
+
     try:
+        # print('pipeline.get_authenticated_user: ',pipeline.get_authenticated_user(requested_provider, username, third_party_uid))
         return pipeline.get_authenticated_user(requested_provider, username, third_party_uid)
     except USER_MODEL.DoesNotExist:
         AUDIT_LOG.info(
@@ -84,7 +88,7 @@ def _do_third_party_auth(request):
                 username=username, backend_name=backend_name)
         )
         message = Text(_(
-            "You've successfully signed in to your {provider_name} account, "
+            "Bạn đã đăng nhập thành công tài khoản {provider_name}, "
             "but this account isn't linked with your {platform_name} account yet. {blank_lines}"
             "Use your {platform_name} username and password to sign in to {platform_name} below, "
             "and then link your {platform_name} account with {provider_name} from your dashboard. {blank_lines}"
@@ -126,6 +130,7 @@ def _get_user_by_email_or_username(request, api_version):
     """
     Finds a user object in the database based on the given request, ignores all fields except for email and username.
     """
+
     is_api_v2 = api_version != API_V1
     login_fields = ['email', 'password']
     if is_api_v2:
@@ -135,6 +140,7 @@ def _get_user_by_email_or_username(request, api_version):
         raise AuthFailedError(_('There was an error receiving your login information. Please email us.'))
 
     email_or_username = request.POST.get('email', None) or request.POST.get('email_or_username', None)
+    print('CLWG: ','email_or_username: ', email_or_username)
     user = _get_user_by_email(email_or_username)
 
     if not user and is_api_v2:
@@ -547,6 +553,8 @@ def login_user(request, api_version='v1'):
             # one case vs. JsonResponse everywhere else.
             try:
                 user = _do_third_party_auth(request)
+                print('CLWG','=======', 'user', user)
+                print('CLWG','=======','type(user)', type(user))
                 is_user_third_party_authenticated = True
                 set_custom_attribute('login_user_tpa_success', True)
             except AuthFailedError as e:
@@ -722,3 +730,5 @@ def _parse_analytics_param_for_course_id(request):
                     analytics=analytics
                 )
             )
+
+
