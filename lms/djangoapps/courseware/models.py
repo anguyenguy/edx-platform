@@ -289,8 +289,8 @@ class StudentModuleHistory(BaseStudentModuleHistory):
     # When the extended studentmodulehistory table exists, don't save
     # duplicate history into courseware_studentmodulehistory, just retain
     # data for reading.
-    if not settings.FEATURES.get('ENABLE_CSMH_EXTENDED'):
-        post_save.connect(save_history, sender=StudentModule)
+    # if not settings.FEATURES.get('ENABLE_CSMH_EXTENDED'):
+    #     post_save.connect(save_history, sender=StudentModule)
 
 
 class XBlockFieldBase(models.Model):
