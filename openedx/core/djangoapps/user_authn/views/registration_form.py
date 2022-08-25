@@ -23,9 +23,14 @@ from openedx.core.djangoapps.user_api import accounts
 from openedx.core.djangoapps.user_api.helpers import FormDescription
 from openedx.core.djangoapps.user_authn.utils import is_registration_api_v1 as is_api_v1
 from openedx.core.djangolib.markup import HTML, Text
+<<<<<<< HEAD
 ### PP1: In here we comment enterprise_support.api for unknow reason make error => we check if it has error because of this
 #from openedx.features.enterprise_support.api import enterprise_customer_for_request
 
+=======
+#============== CUSTOM FOR PP1
+# from openedx.features.enterprise_support.api import enterprise_customer_for_request
+>>>>>>> e48c28dc (Login with FUNiX Account)
 from common.djangoapps.student.models import (
     CourseEnrollmentAllowed,
     UserProfile,
@@ -1119,11 +1124,19 @@ class RegistrationFormFactory:
                     # ensure that the user explicitly checks that field.
                     # pylint: disable=consider-using-ternary
                     print("PP1===========>", 'enterprise_customer_for_request is using.' )
+<<<<<<< HEAD
                     # hide_registration_fields_except_tos = (
                     #     (
                     #         current_provider.skip_registration_form and enterprise_customer_for_request(request)
                     #     ) or current_provider.sync_learner_profile_data
                     # )
+=======
+                    hide_registration_fields_except_tos = (
+                        (
+                            current_provider.skip_registration_form and enterprise_customer_for_request(request)
+                        ) or current_provider.sync_learner_profile_data
+                    )
+>>>>>>> e48c28dc (Login with FUNiX Account)
 
                     # for field_name in self.DEFAULT_FIELDS + self.EXTRA_FIELDS:
                     #     if field_name in field_overrides:

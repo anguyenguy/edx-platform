@@ -674,7 +674,13 @@ def process_survey_link(survey_link, user):
 
 
 def do_create_account(form, custom_form=None):
+<<<<<<< HEAD
     #### print('PP1','======','do_create_account', form);
+=======
+    # print('PP1','======','do_create_account', form);
+    # print('PP1','======','do_create_account type(form)', type(form));
+    # print('PP1','======','do_create_account custom_form', custom_form);
+>>>>>>> e48c28dc (Login with FUNiX Account)
     """
     Given cleaned post variables, create the User and UserProfile objects, as well as the
     registration for this user.
