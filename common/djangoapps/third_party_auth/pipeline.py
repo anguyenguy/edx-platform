@@ -56,7 +56,9 @@ rather than spreading them across two functions in the pipeline.
 
 See https://python-social-auth.readthedocs.io/en/latest/pipeline.html for more docs.
 """
-
+import logging
+import random
+import string
 
 import base64
 import hashlib
@@ -103,8 +105,16 @@ from common.djangoapps.util.json_request import JsonResponse
 
 from . import provider
 
-################# CUSTOM FOR PP1 =====================
+#=================== CUSTOM FOR PP1: IMPORT =====================
 from django.contrib.auth.models import User
+from openedx.core.djangoapps.user_authn.views.registration_form import (
+    AccountCreationForm,
+    get_registration_extension_form
+)
+from common.djangoapps.student.helpers import (
+    do_create_account
+)
+#=================== END OF CUSTOM ==============================
 
 # These are the query string params you can pass
 # to the URL that starts the authentication process.
@@ -279,6 +289,22 @@ def lift_quarantine(request):
     request.session.pop('third_party_auth_quarantined_modules', None)
 
 
+#===================== CUSTOM FOR PP1 FUNCTION ========================
+
+def _is_funix_email(email):
+    # email has to contain @funix.edu.vn in the end.
+    _funix_email_tail = '@funix.edu.vn'
+    if not email[-13:].__eq__(_funix_email_tail):
+        return False
+    return True
+
+def _create_random_password(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    print("Random string of length", length, "is:", result_str)
+
+#==========================   END CUSTOM  ==============================
+
 def get_authenticated_user(auth_provider, username, uid):
     """Gets a saved user authenticated by a particular backend.
 
@@ -301,27 +327,78 @@ def get_authenticated_user(auth_provider, username, uid):
         user has no social auth associated with the given backend.
         AssertionError: if the user is not authenticated.
     """
-    ##############################    CUSTOM   ############################
+    #====================== CUSTOM FOR PP1 CUSTOM FUNCTION ============================
     """
     IN HERE WHERE WANT TO CUSTOM FOR JUST FUNIX GOOGLE ACCOUNT SIGN IN
+    We have parametes: username = username; email = uid; password = random
     """
-    match = User.objects.get(email=uid)
-    #match = social_django.models.DjangoStorage.user.get_social_auth(provider='google-oauth2', uid=uid)
+    # Check is funix email
+    # print('PP1:','=====','email',uid)
 
-    if not match:
-        raise User.DoesNotExist
+    if not _is_funix_email(email=uid):
+        raise ValueError("This is not funix email")
+    try:
+        user = User.objects.get(email=uid)
+        print('PP1:','=====','Finding email successfully!')
+    except:
+        print('PP1:', '==========: ', 'Create new account for user:', username)
+        # If do not existing user profile of this account, we want to create new one
+        params = {
+            'next': '/', 
+            'email': uid, 
+            'name': username, 
+            'username': username, 
+            'level_of_education': '', 
+            'gender': '', 
+            'year_of_birth': '', 
+            'mailing_address': '', 
+            'goals': '', 
+            'terms_of_service': 'true', 
+            'password': _create_random_password(8)
+        }
+        extra_fields=  {
+            'confirm_email': 'hidden', 
+            'level_of_education': 'optional', 
+            'gender': 'optional', 
+            'year_of_birth': 'optional', 
+            'mailing_address': 'optional', 
+            'goals': 'optional', 
+            'honor_code': 'hidden', 
+            'terms_of_service': 'required', 
+            'city': 'hidden', 
+            'country': 'hidden'
+        }
+        extended_profile_fields= {}
+        tos_required = True
+
+        form = AccountCreationForm(
+            data=params,
+            extra_fields=extra_fields,
+            extended_profile_fields=extended_profile_fields,
+            do_third_party_auth=False,
+            tos_required=tos_required,
+        )
+        custom_form = get_registration_extension_form(data=params)
+        (user, profile, registration) = do_create_account(form, custom_form)
+
+        # user = User(
+        #     username=username,
+        #     email=uid,
+        #     is_active=False
+        # )
+        # user.set_password(_create_random_password(8))
+        # user.save()
+        # print('PP1:', '==========: ', 'Create new user successful: ', user)
+    #match = social_django.models.DjangoStorage.user.get_social_auth(provider='google-oauth2', uid=uid)
 
     # if not match or match.user.username != username:
     #     raise User.DoesNotExist
-
-    user = match
-    # user = match.user
 
     user.backend = 'social_core.backends.google.GoogleOAuth2'
     # user.backend = auth_provider.get_authentication_backend()
 
     return user
-    ######################### END CUSTOM ######################
+    #============================= END CUSTOM =====================================
 
 def _get_enabled_provider(provider_id):
     """Gets an enabled provider by its provider_id member or throws."""

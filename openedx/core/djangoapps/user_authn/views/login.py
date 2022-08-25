@@ -70,7 +70,9 @@ def _do_third_party_auth(request):
     """
     User is already authenticated via 3rd party, now try to find and return their associated Django user.
     """
+    
     running_pipeline = pipeline.get(request)
+    # print("========> PP1:","running_pipeline['kwargs']: ", running_pipeline['kwargs'])
     username = running_pipeline['kwargs'].get('username')
     backend_name = running_pipeline['backend']
     third_party_uid = running_pipeline['kwargs']['uid']
@@ -81,6 +83,24 @@ def _do_third_party_auth(request):
     try:
         # print('pipeline.get_authenticated_user: ',pipeline.get_authenticated_user(requested_provider, username, third_party_uid))
         return pipeline.get_authenticated_user(requested_provider, username, third_party_uid)
+    except ValueError as ve:
+        AUDIT_LOG.info(
+            "Login failed - user with username {username} is not use FUNiX email to login, {ve} "
+        )
+        message = Text(_(
+            "Hiện tại bạn đang không dùng tài khoản email của FUNiX để đăng nhập, "
+            "bạn vui lòng đăng nhập lại hệ thống với tài khoản FUNiX (@funix.edu.vn). {blank_lines}"
+            "Recently, you are not use FUNiX email to login,"
+            "please login with FUNiX email (@funix.edu.vn) again!{blank_lines}"
+        )).format(
+            blank_lines=HTML('<br/><br/>'),
+            platform_name=platform_name,
+            provider_name=requested_provider.name,
+            register_label_strong=HTML('<strong>{register_text}</strong>').format(
+                register_text=_('Register')
+            )
+        )
+        raise AuthFailedError(message, error_code='is_not_funix_email')  # lint-amnesty, pylint: disable=raise-missing-from       
     except USER_MODEL.DoesNotExist:
         AUDIT_LOG.info(
             "Login failed - user with username {username} has no social auth "
@@ -88,7 +108,7 @@ def _do_third_party_auth(request):
                 username=username, backend_name=backend_name)
         )
         message = Text(_(
-            "Bạn đã đăng nhập thành công tài khoản {provider_name}, "
+            "You have successfully signed into {provider_name}, "
             "but this account isn't linked with your {platform_name} account yet. {blank_lines}"
             "Use your {platform_name} username and password to sign in to {platform_name} below, "
             "and then link your {platform_name} account with {provider_name} from your dashboard. {blank_lines}"
@@ -102,7 +122,6 @@ def _do_third_party_auth(request):
                 register_text=_('Register')
             )
         )
-
         raise AuthFailedError(message, error_code='third-party-auth-with-no-linked-account')  # lint-amnesty, pylint: disable=raise-missing-from
 
 
@@ -183,7 +202,7 @@ def _generate_locked_out_error_message():
         error_message,
         error_code='account-locked-out',
         context={
-            'locked_out_period': int(locked_out_period_in_sec / 60)
+            'locked_out_period': int(locked_out_period_in_sec / 60)  
         }
     )
 
@@ -553,8 +572,6 @@ def login_user(request, api_version='v1'):
             # one case vs. JsonResponse everywhere else.
             try:
                 user = _do_third_party_auth(request)
-                print('CLWG','=======', 'user', user)
-                print('CLWG','=======','type(user)', type(user))
                 is_user_third_party_authenticated = True
                 set_custom_attribute('login_user_tpa_success', True)
             except AuthFailedError as e:
@@ -565,10 +582,11 @@ def login_user(request, api_version='v1'):
 
                 # user successfully authenticated with a third party provider, but has no linked Open edX account
                 response_content = e.get_response()
+                # print('PP1:', '=========','response_content: ' , response_content)
                 return JsonResponse(response_content, status=403)
         else:
             user = _get_user_by_email_or_username(request, api_version)
-
+        
         _check_excessive_login_attempts(user)
 
         possibly_authenticated_user = user

@@ -208,7 +208,7 @@ def create_account_with_params(request, params):  # pylint: disable=too-many-sta
         registration_fields.get('terms_of_service') != 'hidden' or
         registration_fields.get('honor_code') != 'hidden'
     )
-
+    print('PP1','======','AccountCreationForm','  params= ' ,params,'   extra_fields= ',extra_fields,'   extended_profile_fields=', extended_profile_fields,'    tos_required=', tos_required);
     form = AccountCreationForm(
         data=params,
         extra_fields=extra_fields,

@@ -23,7 +23,8 @@ from openedx.core.djangoapps.user_api import accounts
 from openedx.core.djangoapps.user_api.helpers import FormDescription
 from openedx.core.djangoapps.user_authn.utils import is_registration_api_v1 as is_api_v1
 from openedx.core.djangolib.markup import HTML, Text
-from openedx.features.enterprise_support.api import enterprise_customer_for_request
+#============== CUSTOM FOR PP1
+# from openedx.features.enterprise_support.api import enterprise_customer_for_request
 from common.djangoapps.student.models import (
     CourseEnrollmentAllowed,
     UserProfile,
@@ -1116,6 +1117,7 @@ class RegistrationFormFactory:
                     # enterprise context, we need to hide all fields except for terms of service and
                     # ensure that the user explicitly checks that field.
                     # pylint: disable=consider-using-ternary
+                    print("PP1===========>", 'enterprise_customer_for_request is using.' )
                     hide_registration_fields_except_tos = (
                         (
                             current_provider.skip_registration_form and enterprise_customer_for_request(request)
