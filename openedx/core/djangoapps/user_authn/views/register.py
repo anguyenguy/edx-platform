@@ -2,7 +2,6 @@
 Registration related views.
 """
 
-
 import datetime
 import json
 import logging
