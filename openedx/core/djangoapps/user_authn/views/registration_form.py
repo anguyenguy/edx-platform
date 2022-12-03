@@ -24,6 +24,7 @@ from openedx.core.djangoapps.user_api.helpers import FormDescription
 from openedx.core.djangoapps.user_authn.utils import is_registration_api_v1 as is_api_v1
 from openedx.core.djangolib.markup import HTML, Text
 <<<<<<< HEAD
+<<<<<<< HEAD
 ### PP1: In here we comment enterprise_support.api for unknow reason make error => we check if it has error because of this
 #from openedx.features.enterprise_support.api import enterprise_customer_for_request
 
@@ -31,6 +32,11 @@ from openedx.core.djangolib.markup import HTML, Text
 #============== CUSTOM FOR PP1
 # from openedx.features.enterprise_support.api import enterprise_customer_for_request
 >>>>>>> e48c28dc (Login with FUNiX Account)
+=======
+### PP1: In here we comment enterprise_support.api for unknow reason make error => we check if it has error because of this
+#from openedx.features.enterprise_support.api import enterprise_customer_for_request
+
+>>>>>>> 21883e00 (Update access details course)
 from common.djangoapps.student.models import (
     CourseEnrollmentAllowed,
     UserProfile,
@@ -1125,11 +1131,15 @@ class RegistrationFormFactory:
                     # pylint: disable=consider-using-ternary
                     print("PP1===========>", 'enterprise_customer_for_request is using.' )
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 21883e00 (Update access details course)
                     # hide_registration_fields_except_tos = (
                     #     (
                     #         current_provider.skip_registration_form and enterprise_customer_for_request(request)
                     #     ) or current_provider.sync_learner_profile_data
                     # )
+<<<<<<< HEAD
 =======
                     hide_registration_fields_except_tos = (
                         (
@@ -1137,6 +1147,8 @@ class RegistrationFormFactory:
                         ) or current_provider.sync_learner_profile_data
                     )
 >>>>>>> e48c28dc (Login with FUNiX Account)
+=======
+>>>>>>> 21883e00 (Update access details course)
 
                     # for field_name in self.DEFAULT_FIELDS + self.EXTRA_FIELDS:
                     #     if field_name in field_overrides:

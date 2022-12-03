@@ -103,13 +103,11 @@
                 this.$formFeedback = this.$container.find('.js-form-feedback');
                 this.$submitButton = this.$container.find(this.submitButton);
 
-                console.log('PP1:', '=========', 'this.$formFeedback',this.$formFeedback)
-
                 if (this.errorMessage) {
                     formErrorsTitle = _.sprintf(
                         gettext('An error occurred when signing you in to %s.'),
                         this.platformName
-                    );
+                    );  
                     this.renderErrors(formErrorsTitle, [this.errorMessage]);
                 } else if (this.currentProvider) {
                     /* If we're already authenticated with a third-party

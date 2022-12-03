@@ -3,7 +3,6 @@ This module is essentially a broker to xmodule/tabs.py -- it was originally intr
 perform some LMS-specific tab display gymnastics for the Entrance Exams feature
 """
 
-
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_noop
@@ -16,7 +15,6 @@ from openedx.features.course_experience import DISABLE_UNIFIED_COURSE_TAB_FLAG, 
 from openedx.features.course_experience.url_helpers import get_learning_mfe_home_url
 from common.djangoapps.student.models import CourseEnrollment
 from xmodule.tabs import CourseTab, CourseTabList, course_reverse_func_from_name_func, key_checker  # lint-amnesty, pylint: disable=wrong-import-order
-
 
 class EnrolledTab(CourseTab):
     """

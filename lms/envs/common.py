@@ -116,7 +116,7 @@ FEATURES = {
 
     # .. toggle_name: FEATURES['ENABLE_DISCUSSION_SERVICE']
     # .. toggle_implementation: DjangoSetting
-    # .. toggle_default: True
+    # .. toggle_default: True   
     # .. toggle_description: When True, it will enable the Discussion tab in courseware for all courses. Setting this
     #   to False will not contain inline discussion components and discussion tab in any courses.
     # .. toggle_use_cases: open_edx
@@ -800,7 +800,7 @@ FEATURES = {
     # .. toggle_use_cases: open_edx
     # .. toggle_creation_date: 2017-07-15
     # .. toggle_tickets: https://github.com/edx/edx-platform/pull/15006
-    'ENABLE_BULK_ENROLLMENT_VIEW': False,
+    'ENABLE_BULK_ENROLLMENT_VIEW': True,
 
     # Set to enable Enterprise integration
     'ENABLE_ENTERPRISE_INTEGRATION': False,
@@ -3967,13 +3967,13 @@ COUNTRIES_OVERRIDE = {
 
 # which access.py permission name to check in order to determine if a course is visible in
 # the course catalog. We default this to the legacy permission 'see_exists'.
-COURSE_CATALOG_VISIBILITY_PERMISSION = 'see_exists'
+COURSE_CATALOG_VISIBILITY_PERMISSION = 'see_in_catalog'
 
 # which access.py permission name to check in order to determine if a course about page is
 # visible. We default this to the legacy permission 'see_exists'.
-COURSE_ABOUT_VISIBILITY_PERMISSION = 'see_exists'
+COURSE_ABOUT_VISIBILITY_PERMISSION = 'see_about_page'
 
-DEFAULT_COURSE_VISIBILITY_IN_CATALOG = "both"
+DEFAULT_COURSE_VISIBILITY_IN_CATALOG = "about"
 
 # .. toggle_name: DEFAULT_MOBILE_AVAILABLE
 # .. toggle_implementation: DjangoSetting
