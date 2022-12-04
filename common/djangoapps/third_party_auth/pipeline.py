@@ -114,14 +114,9 @@ from openedx.core.djangoapps.user_authn.views.registration_form import (
 from common.djangoapps.student.helpers import (
     do_create_account
 )
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 import time
-=======
->>>>>>> e48c28dc (Login with FUNiX Account)
-=======
-import time
->>>>>>> 21883e00 (Update access details course)
+
 #=================== END OF CUSTOM ==============================
 
 # These are the query string params you can pass
@@ -296,23 +291,9 @@ def lift_quarantine(request):
     """
     request.session.pop('third_party_auth_quarantined_modules', None)
 
-
-<<<<<<< HEAD
-<<<<<<< HEAD
 ####===================== CUSTOM FOR PP1 FUNCTION ========================
 def _is_funix_email(email):
     # emails of FUNiX has to contain @funix.edu.vn in the end.
-=======
-#===================== CUSTOM FOR PP1 FUNCTION ========================
-
-def _is_funix_email(email):
-    # email has to contain @funix.edu.vn in the end.
->>>>>>> e48c28dc (Login with FUNiX Account)
-=======
-####===================== CUSTOM FOR PP1 FUNCTION ========================
-def _is_funix_email(email):
-    # emails of FUNiX has to contain @funix.edu.vn in the end.
->>>>>>> 21883e00 (Update access details course)
     _funix_email_tail = '@funix.edu.vn'
     if not email[-13:].__eq__(_funix_email_tail):
         return False
@@ -322,16 +303,8 @@ def _create_random_password(length):
     letters = string.ascii_lowercase
     result_str = ''.join(random.choice(letters) for i in range(length))
     print("Random string of length", length, "is:", result_str)
+####==========================   END CUSTOM  ==============================
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-####==========================   END CUSTOM  ==============================
-=======
-#==========================   END CUSTOM  ==============================
->>>>>>> e48c28dc (Login with FUNiX Account)
-=======
-####==========================   END CUSTOM  ==============================
->>>>>>> 21883e00 (Update access details course)
 
 def get_authenticated_user(auth_provider, username, uid):
     """Gets a saved user authenticated by a particular backend.
@@ -367,50 +340,23 @@ def get_authenticated_user(auth_provider, username, uid):
         raise ValueError("This is not funix email")
     try:
         user = User.objects.get(email=uid)
-        print('PP1:','=====','Finding email successfully!')
     except:
         print('PP1:', '==========: ', 'Create new account for user:', username)
         # If do not existing user profile of this account, we want to create new one
-<<<<<<< HEAD
-<<<<<<< HEAD
         modified_username = username + str(int(time.time())) 
         generate_pw = _create_random_password(8)
-        
-=======
->>>>>>> e48c28dc (Login with FUNiX Account)
-=======
-        modified_username = username + str(int(time.time())) 
-        generate_pw = _create_random_password(8)
-        
->>>>>>> 21883e00 (Update access details course)
         params = {
             'next': '/', 
             'email': uid, 
             'name': username, 
-<<<<<<< HEAD
-<<<<<<< HEAD
             'username': modified_username, 
-=======
-            'username': username, 
->>>>>>> e48c28dc (Login with FUNiX Account)
-=======
-            'username': modified_username, 
->>>>>>> 21883e00 (Update access details course)
             'level_of_education': '', 
             'gender': '', 
             'year_of_birth': '', 
             'mailing_address': '', 
             'goals': '', 
             'terms_of_service': 'true', 
-<<<<<<< HEAD
-<<<<<<< HEAD
             'password': "{}".format(generate_pw)
-=======
-            'password': _create_random_password(8)
->>>>>>> e48c28dc (Login with FUNiX Account)
-=======
-            'password': "{}".format(generate_pw)
->>>>>>> 21883e00 (Update access details course)
         }
         extra_fields=  {
             'confirm_email': 'hidden', 
@@ -437,10 +383,6 @@ def get_authenticated_user(auth_provider, username, uid):
         custom_form = get_registration_extension_form(data=params)
         (user, profile, registration) = do_create_account(form, custom_form)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        print('PP1:', '==========: ', 'Create new user successful: ', user)
-=======
         # user = User(
         #     username=username,
         #     email=uid,
@@ -453,11 +395,7 @@ def get_authenticated_user(auth_provider, username, uid):
 
     # if not match or match.user.username != username:
     #     raise User.DoesNotExist
->>>>>>> e48c28dc (Login with FUNiX Account)
-=======
-        print('PP1:', '==========: ', 'Create new user successful: ', user)
->>>>>>> 21883e00 (Update access details course)
-
+    
     user.backend = 'social_core.backends.google.GoogleOAuth2'
     # user.backend = auth_provider.get_authentication_backend()
 
